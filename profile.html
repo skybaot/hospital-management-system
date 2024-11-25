@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMS - User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/security.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-blue-900 text-white px-6 py-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">HMS Profile</h1>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="hover:text-blue-200">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <button onclick="logout()" class="hover:text-red-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-6 py-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Profile Card -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <!-- Profile Header -->
+                    <div class="bg-blue-900 text-white p-6">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-blue-700 p-4">
+                                <i class="fas fa-user text-4xl"></i>
+                            </div>
+                            <div class="ml-6">
+                                <h2 class="text-2xl font-bold" id="profile-name"></h2>
+                                <p class="text-blue-200" id="profile-role"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Content -->
+                    <div class="p-6">
+                        <!-- Profile Sections -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Personal Information -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
+                                    <i class="fas fa-info-circle mr-2"></i>Personal Information
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">Username:</span>
+                                        <span id="profile-username" class="font-medium"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">Email:</span>
+                                        <span id="profile-email" class="font-medium"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">Phone:</span>
+                                        <span id="profile-phone" class="font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account Settings -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
+                                    <i class="fas fa-cog mr-2"></i>Account Settings
+                                </h3>
+                                <div class="space-y-4">
+                                    <button onclick="changePassword()" 
+                                            class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-key"></i>
+                                        <span>Change Password</span>
+                                    </button>
+                                    <button onclick="updateProfile()" 
+                                            class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                        <span>Update Profile</span>
+                                    </button>
+                                    <button onclick="viewActivityLog()" 
+                                            class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-history"></i>
+                                        <span>View Activity Log</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Security Settings -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
+                                    <i class="fas fa-shield-alt mr-2"></i>Security Settings
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Two-Factor Authentication</span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="2fa-toggle" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+                                                        peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full 
+                                                        peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] 
+                                                        after:left-[2px] after:bg-white after:border-gray-300 after:border 
+                                                        after:rounded-full after:h-5 after:w-5 after:transition-all 
+                                                        peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Email Notifications</span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="email-notif-toggle" class="sr-only peer" checked>
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 
+                                                        peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full 
+                                                        peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] 
+                                                        after:left-[2px] after:bg-white after:border-gray-300 after:border 
+                                                        after:rounded-full after:h-5 after:w-5 after:transition-all 
+                                                        peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Session Information -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
+                                    <i class="fas fa-clock mr-2"></i>Session Information
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">Last Login:</span>
+                                        <span id="last-login" class="font-medium"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">IP Address:</span>
+                                        <span id="ip-address" class="font-medium">Local</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 w-32">Browser:</span>
+                                        <span id="browser-info" class="font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!AuthService.isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        // Start session timer
+        SecurityUtils.startSessionTimer(30); // 30 minutes timeout
+
+        // Load user profile
+        function loadProfile() {
+            const user = AuthService.getCurrentUser();
+            if (!user) return;
+
+            document.getElementById('profile-name').textContent = user.name;
+            document.getElementById('profile-role').textContent = 
+                user.role.charAt(0).toUpperCase() + user.role.slice(1);
+            document.getElementById('profile-username').textContent = user.username;
+            document.getElementById('profile-email').textContent = user.username; // In this demo, username is email
+            document.getElementById('profile-phone').textContent = '(555) 123-4567'; // Demo data
+
+            // Set session info
+            document.getElementById('last-login').textContent = new Date().toLocaleString();
+            document.getElementById('browser-info').textContent = navigator.userAgent;
+
+            // Log activity
+            SecurityUtils.logActivity('profile_view', { username: user.username });
+        }
+
+        // Change Password
+        async function changePassword() {
+            const { value: formValues } = await Swal.fire({
+                title: 'Change Password',
+                html: `
+                    <input type="password" id="currentPassword" class="swal2-input" placeholder="Current Password">
+                    <input type="password" id="newPassword" class="swal2-input" placeholder="New Password">
+                    <input type="password" id="confirmPassword" class="swal2-input" placeholder="Confirm New Password">
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                preConfirm: () => {
+                    const current = document.getElementById('currentPassword').value;
+                    const newPass = document.getElementById('newPassword').value;
+                    const confirm = document.getElementById('confirmPassword').value;
+
+                    if (!current || !newPass || !confirm) {
+                        Swal.showValidationMessage('Please fill all fields');
+                        return false;
+                    }
+
+                    if (newPass !== confirm) {
+                        Swal.showValidationMessage('New passwords do not match');
+                        return false;
+                    }
+
+                    const validation = SecurityUtils.validatePassword(newPass);
+                    if (!validation.isValid) {
+                        Swal.showValidationMessage(validation.messages.join('\n'));
+                        return false;
+                    }
+
+                    return { current, newPass };
+                }
+            });
+
+            if (formValues) {
+                try {
+                    // In a real app, this would be an API call
+                    await SecurityUtils.hashPassword(formValues.newPass);
+                    SecurityUtils.logActivity('password_change', { success: true });
+                    
+                    Swal.fire(
+                        'Success!',
+                        'Your password has been changed.',
+                        'success'
+                    );
+                } catch (error) {
+                    SecurityUtils.logActivity('password_change', { success: false, error: error.message });
+                    Swal.fire(
+                        'Error!',
+                        'Failed to change password.',
+                        'error'
+                    );
+                }
+            }
+        }
+
+        // Update Profile
+        async function updateProfile() {
+            const user = AuthService.getCurrentUser();
+            const { value: formValues } = await Swal.fire({
+                title: 'Update Profile',
+                html: `
+                    <input type="text" id="fullName" class="swal2-input" placeholder="Full Name" value="${user.name}">
+                    <input type="email" id="email" class="swal2-input" placeholder="Email" value="${user.username}">
+                    <input type="tel" id="phone" class="swal2-input" placeholder="Phone" value="(555) 123-4567">
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value
+                    };
+                }
+            });
+
+            if (formValues) {
+                // In a real app, this would be an API call
+                SecurityUtils.logActivity('profile_update', formValues);
+                
+                Swal.fire(
+                    'Success!',
+                    'Your profile has been updated.',
+                    'success'
+                ).then(() => {
+                    loadProfile();
+                });
+            }
+        }
+
+        // View Activity Log
+        function viewActivityLog() {
+            const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
+            const logHtml = logs
+                .filter(log => log.user === AuthService.getCurrentUser().username)
+                .map(log => `
+                    <div class="border-b py-2">
+                        <div class="font-medium">${log.action}</div>
+                        <div class="text-sm text-gray-600">
+                            ${new Date(log.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                `)
+                .join('');
+
+            Swal.fire({
+                title: 'Activity Log',
+                width: 600,
+                html: `
+                    <div class="max-h-96 overflow-y-auto text-left">
+                        ${logHtml || '<p class="text-center text-gray-500">No activity recorded</p>'}
+                    </div>
+                `
+            });
+        }
+
+        // Logout function
+        function logout() {
+            SecurityUtils.logActivity('logout', { success: true });
+            AuthService.logout();
+            window.location.href = 'login.html';
+        }
+
+        // Initialize
+        loadProfile();
+
+        // Handle toggle changes
+        document.getElementById('2fa-toggle').addEventListener('change', function(e) {
+            SecurityUtils.logActivity('2fa_toggle', { enabled: e.target.checked });
+            if (e.target.checked) {
+                Swal.fire(
+                    'Info',
+                    'Two-factor authentication setup would be initiated here.',
+                    'info'
+                );
+            }
+        });
+
+        document.getElementById('email-notif-toggle').addEventListener('change', function(e) {
+            SecurityUtils.logActivity('email_notifications_toggle', { enabled: e.target.checked });
+        });
+    </script>
+</body>
+</html>

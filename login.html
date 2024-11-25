@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/security.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Login Form Card -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 transition-all duration-300">
+            <div class="text-center mb-8">
+                <i class="fas fa-hospital-user text-5xl text-blue-600 mb-4"></i>
+                <h1 class="text-2xl font-bold text-blue-900 mb-2">Hospital Management System</h1>
+                <p class="text-gray-600 text-sm">Welcome back! Please login to your account.</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <!-- Login/Register Toggle -->
+                <div class="flex rounded-lg bg-gray-100 p-1">
+                    <button onclick="switchForm('login')" id="loginBtn" 
+                            class="flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 bg-white shadow">
+                        Login
+                    </button>
+                    <button onclick="switchForm('register')" id="registerBtn"
+                            class="flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900">
+                        Register
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    <input type="text" id="loginUsername" name="username" required
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Username">
+                </div>
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-gray-400"></i>
+                    </div>
+                    <input type="password" id="loginPassword" name="password" required
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Password">
+                </div>
+
+                <button type="button" onclick="handleLogin()" 
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                    Login
+                </button>
+            </form>
+
+            <!-- Register Form (Hidden by default) -->
+            <form id="registerForm" class="hidden space-y-6" onsubmit="handleRegister(event)">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    <input type="text" name="fullname" required
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Full Name">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="fullname-error"></p>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-gray-400"></i>
+                    </div>
+                    <input type="email" name="email" required
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Email Address">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="email-error"></p>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-phone text-gray-400"></i>
+                    </div>
+                    <input type="tel" name="phone" required pattern="[0-9]{10}"
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Phone Number">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="phone-error"></p>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-gray-400"></i>
+                    </div>
+                    <input type="password" name="reg-password" required minlength="8"
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Password">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="reg-password-error"></p>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-gray-400"></i>
+                    </div>
+                    <input type="password" name="confirm-password" required
+                        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Confirm Password">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="confirm-password-error"></p>
+                </div>
+                <div id="register-error" class="text-red-600 text-sm text-center hidden"></div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white rounded-lg py-2.5 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center space-x-2">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Register</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is already logged in
+        if (AuthService.isAuthenticated()) {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize password strength meter
+        function updatePasswordStrength(password) {
+            const validation = SecurityUtils.validatePassword(password);
+            const strengthElement = document.getElementById('reg-password-error');
+            
+            if (password.length > 0) {
+                strengthElement.classList.remove('hidden');
+                const strengthText = ['Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'][validation.score - 1];
+                const strengthClass = [
+                    'text-red-600',
+                    'text-red-600',
+                    'text-yellow-600',
+                    'text-green-600',
+                    'text-green-600'
+                ][validation.score - 1];
+
+                strengthElement.textContent = `Password Strength: ${strengthText}`;
+                strengthElement.className = `mt-1 text-sm ${strengthClass}`;
+
+                if (!validation.isValid) {
+                    strengthElement.innerHTML += '<ul class="mt-1 list-disc list-inside">' +
+                        validation.messages.map(msg => `<li>${msg}</li>`).join('') +
+                        '</ul>';
+                }
+            } else {
+                strengthElement.classList.add('hidden');
+            }
+        }
+
+        async function handleLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please enter both username and password'
+                });
+                return;
+            }
+
+            try {
+                await AuthService.login(username, password);
+                window.location.href = 'index.html';
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: 'Invalid username or password. Please try again.'
+                });
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            clearErrors();
+
+            const form = event.target;
+            const fullname = SecurityUtils.sanitizeInput(form['fullname'].value);
+            const email = SecurityUtils.sanitizeInput(form['email'].value);
+            const phone = SecurityUtils.sanitizeInput(form['phone'].value);
+            const password = form['reg-password'].value;
+            const confirmPassword = form['confirm-password'].value;
+
+            // Validation
+            if (password !== confirmPassword) {
+                showError('confirm-password-error', 'Passwords do not match');
+                return;
+            }
+
+            const passwordValidation = SecurityUtils.validatePassword(password);
+            if (!passwordValidation.isValid) {
+                showError('reg-password-error', passwordValidation.messages.join('\n'));
+                return;
+            }
+
+            if (!/^\d{10}$/.test(phone)) {
+                showError('phone-error', 'Please enter a valid 10-digit phone number');
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('email-error', 'Please enter a valid email address');
+                return;
+            }
+
+            try {
+                showLoading();
+
+                // Hash password before sending
+                const hashedPassword = await SecurityUtils.hashPassword(password);
+
+                await AuthService.register({
+                    username: email,
+                    password: hashedPassword,
+                    fullname: fullname,
+                    phone: phone
+                });
+
+                // Log successful registration
+                await SecurityUtils.logActivity('register', { 
+                    success: true, 
+                    username: email 
+                });
+
+                // Show success message
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Registration Successful!',
+                    text: 'Welcome to Hospital Management System',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                // Start session timer
+                SecurityUtils.startSessionTimer(30);
+
+                // Redirect to dashboard
+                window.location.href = 'index.html';
+            } catch (error) {
+                // Log failed registration
+                await SecurityUtils.logActivity('register', { 
+                    success: false, 
+                    username: email,
+                    error: error.message
+                });
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registration Failed',
+                    text: error.message || 'Please try again later'
+                });
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Add password strength indicator
+        document.querySelector('input[name="reg-password"]').addEventListener('input', function(e) {
+            updatePasswordStrength(e.target.value);
+        });
+
+        function switchForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginBtn.classList.add('bg-white', 'shadow');
+                loginBtn.classList.remove('text-gray-600');
+                registerBtn.classList.remove('bg-white', 'shadow');
+                registerBtn.classList.add('text-gray-600');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                registerBtn.classList.add('bg-white', 'shadow');
+                registerBtn.classList.remove('text-gray-600');
+                loginBtn.classList.remove('bg-white', 'shadow');
+                loginBtn.classList.add('text-gray-600');
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('[id$="-error"]');
+            errorElements.forEach(element => {
+                element.classList.add('hidden');
+                element.textContent = '';
+            });
+        }
+    </script>
+</body>
+</html>
