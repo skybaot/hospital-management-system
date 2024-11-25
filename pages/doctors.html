@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System - Doctors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="min-h-screen flex bg-gray-100">
+        <!-- Sidebar -->
+        <aside class="sidebar w-64 min-h-screen p-6">
+            <div class="flex items-center mb-8">
+                <i class="fas fa-hospital-alt text-3xl text-white mr-3"></i>
+                <h1 class="text-white text-xl font-bold">HMS</h1>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="space-y-4">
+                <a href="../index.html" class="sidebar-link">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="doctors.html" class="sidebar-link active">
+                    <i class="fas fa-user-md mr-3"></i>
+                    <span>Doctors</span>
+                </a>
+                <a href="patients.html" class="sidebar-link">
+                    <i class="fas fa-user-injured mr-3"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="appointments.html" class="sidebar-link">
+                    <i class="fas fa-calendar-check mr-3"></i>
+                    <span>Appointments</span>
+                </a>
+                <a href="schedules.html" class="sidebar-link">
+                    <i class="fas fa-clock mr-3"></i>
+                    <span>Schedules</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto">
+            <div class="container mx-auto px-6 py-8">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">Doctors Management</h1>
+                    <p class="text-gray-400">Manage hospital doctors and their information</p>
+                </header>
+
+                <!-- Action Buttons and Search -->
+                <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-4">
+                        <button onclick="doctorManager.openModal('addDoctorModal')" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Add New Doctor
+                        </button>
+                        <div class="relative">
+                            <input type="text" id="searchDoctors" placeholder="Search doctors..." 
+                                   class="search-input w-64">
+                            <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctors List -->
+                <div class="card overflow-hidden">
+                    <table id="doctorsTable" class="min-w-full divide-y divide-gray-700">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Specialization</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Experience</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Phone</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700">
+                            <!-- Doctors will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Doctor Modal -->
+        <div id="addDoctorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+            <div class="modal rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white">Add New Doctor</h3>
+                        <button onclick="doctorManager.closeModal('addDoctorModal')" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="addDoctorForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Doctor ID</label>
+                                <input type="text" id="doctorId" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Full Name</label>
+                                <input type="text" id="doctorName" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Specialization</label>
+                                <select id="specialization" required class="form-input mt-1 block w-full">
+                                    <option value="">Select Specialization</option>
+                                    <option value="Cardiologist">Cardiologist</option>
+                                    <option value="Neurologist">Neurologist</option>
+                                    <option value="Pediatrician">Pediatrician</option>
+                                    <option value="Dermatologist">Dermatologist</option>
+                                    <option value="Orthopedic">Orthopedic</option>
+                                    <option value="Psychiatrist">Psychiatrist</option>
+                                    <option value="Gynecologist">Gynecologist</option>
+                                    <option value="Oncologist">Oncologist</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Experience (Years)</label>
+                                <input type="number" id="experience" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Phone</label>
+                                <input type="tel" id="phone" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Email</label>
+                                <input type="email" id="email" required class="form-input mt-1 block w-full">
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end gap-3">
+                            <button type="button" onclick="doctorManager.closeModal('addDoctorModal')" 
+                                    class="btn-secondary">Cancel</button>
+                            <button type="submit" class="btn-primary">Add Doctor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Doctor Modal -->
+        <div id="editDoctorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+            <div class="modal rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white">Edit Doctor</h3>
+                        <button onclick="doctorManager.closeModal('editDoctorModal')" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="editDoctorForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Doctor ID</label>
+                                <input type="text" id="editDoctorId" required class="form-input mt-1 block w-full" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Full Name</label>
+                                <input type="text" id="editDoctorName" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Specialization</label>
+                                <select id="editSpecialization" required class="form-input mt-1 block w-full">
+                                    <option value="">Select Specialization</option>
+                                    <option value="Cardiologist">Cardiologist</option>
+                                    <option value="Neurologist">Neurologist</option>
+                                    <option value="Pediatrician">Pediatrician</option>
+                                    <option value="Dermatologist">Dermatologist</option>
+                                    <option value="Orthopedic">Orthopedic</option>
+                                    <option value="Psychiatrist">Psychiatrist</option>
+                                    <option value="Gynecologist">Gynecologist</option>
+                                    <option value="Oncologist">Oncologist</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Experience (Years)</label>
+                                <input type="number" id="editExperience" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Phone</label>
+                                <input type="tel" id="editPhone" required class="form-input mt-1 block w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">Email</label>
+                                <input type="email" id="editEmail" required class="form-input mt-1 block w-full">
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end gap-3">
+                            <button type="button" onclick="doctorManager.closeModal('editDoctorModal')" 
+                                    class="btn-secondary">Cancel</button>
+                            <button type="submit" class="btn-primary">Update Doctor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/doctors.js"></script>
+</body>
+</html>
